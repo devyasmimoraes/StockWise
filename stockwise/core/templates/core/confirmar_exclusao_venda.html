@@ -1,0 +1,11 @@
+{% extends 'core/base.html' %}
+{% block content %}
+  <h2>Confirmar Exclusão</h2>
+  <p>Você tem certeza que deseja excluir a venda do produto <strong>{{ venda.produto.nome }}</strong> feita em <strong>{{ venda.data|date:"d/m/Y H:i" }}</strong>?</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Sim, excluir</button>
+    <a href="{% url 'lista_vendas' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+{% endblock %}

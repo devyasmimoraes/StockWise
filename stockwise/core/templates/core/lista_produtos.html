@@ -1,0 +1,54 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+  <h2 class="mb-4">Produtos</h2>
+  <a href="{% url 'novo_produto' %}" class="btn btn-primary mb-3">
+    <i class="bi bi-plus-circle"></i> Novo Produto
+  </a>
+
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered shadow-sm rounded overflow-hidden">
+      <thead class="table-dark text-center">
+        <tr>
+          <th>Imagem</th>
+          <th>Nome</th>
+          <th>Descrição</th>
+          <th>Preço</th>
+          <th>Estoque</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody class="align-middle text-center">
+        {% for produto in produtos %}
+          <tr>
+            <td>
+              {% if produto.imagem %}
+                <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}" class="img-thumbnail" style="max-height: 80px;">
+              {% else %}
+                <span class="text-muted">Sem imagem</span>
+              {% endif %}
+            </td>
+            
+            <td>{{ produto.nome }}</td>
+            <td>{{ produto.descricao }}</td>
+            <td>R$ {{ produto.preco }}</td>
+            <td>{{ produto.estoque }}</td>
+            <td>
+              <a href="{% url 'editar_produto' produto.pk %}" class="btn btn-sm btn-warning me-1" title="Editar Produto">
+                <i class="bi bi-pencil-fill"></i>
+              </a>
+              <a href="{% url 'confirmar_exclusao_produto' produto.pk %}" class="btn btn-sm btn-danger" title="Excluir Produto">
+                <i class="bi bi-trash-fill"></i>
+              </a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="6" class="text-center">Nenhum produto cadastrado.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

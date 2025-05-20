@@ -1,0 +1,31 @@
+{% extends 'core/base.html' %}
+{% block content %}
+  <h2>Histórico de Vendas - {{ cliente.nome }}</h2>
+
+  <a href="{% url 'lista_clientes' %}" class="btn btn-secondary mb-3">← Voltar</a>
+
+  {% if vendas %}
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Produto</th>
+          <th>Quantidade</th>
+          <th>Data</th>
+          <th>Observação</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for venda in vendas %}
+        <tr>
+          <td>{{ venda.produto.nome }}</td>
+          <td>{{ venda.quantidade }}</td>
+          <td>{{ venda.data|date:"d/m/Y H:i" }}</td>
+          <td>{{ venda.observacao|default:"-" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert-info">Este cliente ainda não possui vendas registradas.</div>
+  {% endif %}
+{% endblock %}

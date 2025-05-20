@@ -1,0 +1,53 @@
+{% extends 'core/base.html' %}
+{% block content %}
+  <h2>Vendas</h2>
+  <a href="{% url 'nova_venda' %}" class="btn btn-primary mb-3">
+    <i class="bi bi-cart-plus-fill"></i> Nova Venda
+  </a>
+
+  <form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+      <label>De:</label>
+      <input type="date" name="inicio" value="{{ data_inicio }}" class="form-control">
+    </div>
+    <div class="col-auto">
+      <label>Até:</label>
+      <input type="date" name="fim" value="{{ data_fim }}" class="form-control">
+    </div>
+    <div class="col-auto align-self-end">
+      <button type="submit" class="btn btn-primary">Filtrar</button>
+      <a href="{% url 'lista_vendas' %}" class="btn btn-secondary">Limpar</a>
+    </div>
+  </form>
+
+  <table class="table table-hover table-bordered shadow-sm rounded overflow-hidden">
+    <thead class="table-dark text-center">
+      <tr>
+        <th>Produto</th>
+        <th>Quantidade</th>
+        <th>Data</th>
+        <th>Observação</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody class="text-center align-middle">
+      {% for venda in vendas %}
+        <tr>
+          <td>{{ venda.produto.nome }}</td>
+          <td>{{ venda.quantidade }}</td>
+          <td>{{ venda.data|date:"d/m/Y H:i" }}</td>
+          <td>{{ venda.observacao }}</td>
+          <td>
+            <a href="{% url 'confirmar_exclusao_venda' venda.pk %}" class="btn btn-sm btn-danger" title="Excluir venda">
+              <i class="bi bi-trash-fill"></i>
+            </a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5">Nenhuma venda registrada.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

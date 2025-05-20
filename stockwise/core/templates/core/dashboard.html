@@ -1,0 +1,87 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="container">
+  <h2 class="mb-4">Dashboard</h2>
+
+  <!-- Cards principais -->
+  <div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+      <div class="card text-white bg-primary shadow rounded">
+        <div class="card-body">
+          <h5 class="card-title"><i class="bi bi-box-seam"></i> Produtos Cadastrados</h5>
+          <p class="card-text display-6 text-center">{{ total_produtos }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card text-white bg-success shadow rounded">
+        <div class="card-body">
+          <h5 class="card-title"><i class="bi bi-currency-exchange"></i> Vendas Realizadas</h5>
+          <p class="card-text display-6 text-center">{{ total_vendas }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card bg-warning text-dark shadow rounded">
+        <div class="card-body">
+          <h5 class="card-title"><i class="bi bi-exclamation-triangle-fill"></i> Estoque Baixo</h5>
+          {% if produtos_baixo_estoque %}
+            <ul class="list-unstyled small">
+              {% for produto in produtos_baixo_estoque %}
+                <li><strong>{{ produto.nome }}</strong> – {{ produto.estoque }} un.</li>
+              {% endfor %}
+            </ul>
+            <a href="{% url 'lista_produtos' %}" class="btn btn-sm btn-outline-dark mt-2">Ver todos</a>
+          {% else %}
+            <p class="mb-0">Nenhum</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Gráfico de vendas por dia -->
+  <div class="card shadow rounded mb-5">
+    <div class="card-body">
+      <h5 class="card-title mb-3"><i class="bi bi-bar-chart-line-fill"></i> Vendas por Dia</h5>
+      <canvas id="graficoVendas" height="100"></canvas>
+    </div>
+  </div>
+
+  <!-- Injetar dados JSON -->
+  {{ grafico_labels|json_script:"labels-json" }}
+  {{ grafico_dados|json_script:"dados-json" }}
+
+</div>
+
+<!-- Script do gráfico -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const labels = JSON.parse(document.getElementById('labels-json').textContent);
+  const dados = JSON.parse(document.getElementById('dados-json').textContent);
+
+  const ctx = document.getElementById('graficoVendas').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Quantidade Vendida',
+        data: dados,
+        backgroundColor: 'rgba(13, 110, 253, 0.7)',
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+</script>
+{% endblock %}
