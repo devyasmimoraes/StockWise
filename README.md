@@ -33,6 +33,4 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-## 🧠 Autor
 
-Desenvolvido por Victor, Abril/2025
